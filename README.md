@@ -1,0 +1,1 @@
+# Wordpress Shortcode Datastore Plugin
