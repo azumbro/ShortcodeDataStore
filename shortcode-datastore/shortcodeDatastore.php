@@ -3,6 +3,7 @@
     Plugin Name: Shortcode Datastore
     Plugin URI: https://blah.zumbro.ma
     Version: 1.0
+    Description: Allows for flexible plain text of HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
     Author: Alexander
     */
     
@@ -113,7 +114,7 @@
             echo '<div class="wrap">';
             echo '<h1>Shortcode Datastore</h1>';
             echo '<hr>';
-            echo '<div style="float: left"><p>For usage instructions, see <a href="https://github.com/azumbro/shortcodedatastore#usage" target="_blank">documentation</a>.</p></div>';
+            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/shortcodedatastore#usage" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
             echo '<div style="float: right; margin-top: 12px;"><a href="' . wp_nonce_url($url) . '" class="page-title-action">Add Shortcode</a></div>';
             // Output messages for delete or create actions.
