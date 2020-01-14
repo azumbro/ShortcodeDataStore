@@ -1,4 +1,4 @@
-![ShortcodeDatastore Logo](shortcode-datastore/assets/ShortcodeDatastoreLogo.png")
+![ShortcodeDatastore Logo](shortcode-datastore/assets/ShortcodeDatastoreLogo.png)
 
 A Wordpress plugin that allows for flexible text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
 
