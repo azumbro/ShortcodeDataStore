@@ -17,7 +17,7 @@
         // Setup variables.
         $sdsDBSchemaVersion = '1.0.0'; // This value must be incremented whenever a table change is made.
         $installedSchemaVersion = get_option('sdsDBSchemaVersion');
-        $sdsTable = $wpdb->prefix . 'sds_data';
+        $sdsTable = $wpdb->base_prefix . 'sds_data';
         // Bring in the code for the dbDelta call.
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         // Check and make sure that the new schema version is different from the last one.
@@ -56,7 +56,7 @@
         $pluginPageURL = "admin.php?page=sdsoptions";
         $pluginPath = plugins_url("shortcode-datastore/");
         $postEndpoint = "admin-post.php";
-        $sdsTable = $wpdb->prefix . 'sds_data';
+        $sdsTable = $wpdb->base_prefix . 'sds_data';
         // Check if there is a valid nonce in the URL. This is the case for deletions.
         $validNonce = false;
         if($_GET['_wpnonce']) {
@@ -165,7 +165,7 @@
     // This handler takes the POST request from the create form and inserts to the database table.
     function sdsHandler() {        
         global $wpdb;
-        $sdsTable = $wpdb->prefix . 'sds_data';
+        $sdsTable = $wpdb->base_prefix . 'sds_data';
         $pluginPageURL = "admin.php?page=sdsoptions";
         // The 'comingfrom' field specifies create/edit and success specifies if the insert was successful.
         $params = "&comingfrom=" . $_POST["type"] . "&success=";
@@ -206,7 +206,7 @@
     // This code handle shortcodes inserted into WP content.
     function sdsShortcode($atts) {
         global $wpdb;
-        $sdsTable = $wpdb->prefix . 'sds_data';
+        $sdsTable = $wpdb->base_prefix . 'sds_data';
         // Extract the shortcode attributes. We need "key".
         extract(shortcode_atts(array(
             'key' => "",
