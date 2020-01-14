@@ -45,7 +45,7 @@
     // Register the below code as a plugin page on the dashboard.
     add_action( 'admin_menu', 'sdsOptionsAddMenuPage' );
     function sdsOptionsAddMenuPage() {
-        add_menu_page( 'Shortcode Datastore', 'Shortcode Datastore', 'manage_options', 'sdsoptions', 'sdsOptions' );
+        add_menu_page('Shortcode Datastore', 'Shortcode Datastore', 'manage_options', 'sdsoptions', 'sdsOptions');
     }
     function sdsOptions() {
         if(!current_user_can( 'manage_options')) {
@@ -115,9 +115,6 @@
             echo '<div class="wrap">';
             echo '<p align="center"><img src="' . $pluginPath . 'assets/ShortcodeDatastoreLogo.png" width="250px"></p>';
             echo '<hr>';
-            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore" target="_blank">documentation</a>.</p></div>';
-            $url = admin_url() . "admin.php?page=sdsoptions&action=create";
-            echo '<div style="float: right; margin-top: 12px;"><a href="' . wp_nonce_url($url) . '" class="page-title-action">Add Shortcode</a></div>';
             // Output messages for delete or create actions.
             if($isDelete) {
                 echo createMessage(($deleteSuccessful ?  "Shortcode deleted successfully." : "An error ocurred while deleting. Please try again."), !$deleteSuccessful);
@@ -127,6 +124,9 @@
                 $errorMessage = ($_GET["success"] == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
                 echo createMessage(($_GET["success"] == 1 ?  $successMessage : $errorMessage), $_GET["success"] != 1);
             }
+            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore" target="_blank">documentation</a>.</p></div>';
+            $url = admin_url() . "admin.php?page=sdsoptions&action=create";
+            echo '<div style="float: right; margin-top: 12px;"><a href="' . wp_nonce_url($url) . '" class="page-title-action">Add Shortcode</a></div>';
             // Build the shortcode table.
             echo '<table class="wp-list-table widefat fixed striped sites">';
             echo '<thead>';
