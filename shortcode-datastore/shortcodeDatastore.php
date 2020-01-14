@@ -124,7 +124,7 @@
                 $errorMessage = ($_GET["success"] == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
                 echo createMessage(($_GET["success"] == 1 ?  $successMessage : $errorMessage), $_GET["success"] != 1);
             }
-            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore" target="_blank">documentation</a>.</p></div>';
+            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/ShortcodeDatastore" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
             echo '<div style="float: right; margin-top: 12px;"><a href="' . wp_nonce_url($url) . '" class="page-title-action">Add Shortcode</a></div>';
             // Build the shortcode table.
