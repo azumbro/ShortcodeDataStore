@@ -1,11 +1,10 @@
-<p align="center">
-<img src="shortcode-datastore/assets/ShortcodeDatastoreLogo.png" width="50%;" style="margin: 0 auto;">
-</p>
+Shortcode Datastore
+
 A Wordpress plugin that allows for flexible text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
 
-# Installation
-- **Option 1**: Download the plugin zip directly from the Wordpress plugin repository. You can then upload the zip file to the ```plugins``` directory of your Wordpress installation and activate it from the plugin menu.
-- **Option 2**: Select "Add New" from under "Plugins" on the left sidebar of the Wordpress admin dashboard and then search for "Shortcode Datastore" in the search field.
+Installation:
+- Option 1: Download the plugin zip directly from the Wordpress plugin repository. You can then upload the zip file to the ```plugins``` directory of your Wordpress installation and activate it from the plugin menu.
+- Option 2: Select "Add New" from under "Plugins" on the left sidebar of the Wordpress admin dashboard and then search for "Shortcode Datastore" in the search field.
 - Following installation, the plugin must be activated from the "Plugins" page on the Wordpress admin dashboard.
 
 # Usage

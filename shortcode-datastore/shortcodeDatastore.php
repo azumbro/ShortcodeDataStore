@@ -1,13 +1,13 @@
 <?php
     /*
     Plugin Name: Shortcode Datastore
-    Plugin URI: https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore
-    Version: 1.0
+    Plugin URI: https://github.com/azumbro/ShortcodeDatastore
+    Version: 1.0.0
     Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
-    Author: Alexander
+    Author: azumbro
     */
     
-    defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+    defined('ABSPATH') or die('No script kiddies please!');
 
     /* Start function install code. */
     // Register below code for when the plugin is activated.
@@ -54,6 +54,7 @@
         // Setup variables to use on the page.
         global $wpdb;
         $pluginPageURL = "admin.php?page=sdsoptions";
+        $pluginPath = plugins_url("shortcode-datastore/");
         $postEndpoint = "admin-post.php";
         $sdsTable = $wpdb->prefix . 'sds_data';
         // Check if there is a valid nonce in the URL. This is the case for deletions.
@@ -66,7 +67,7 @@
         if(($_GET['action'] == "create" || $_GET['action'] == "edit") && $validNonce) {
             // The form posts to admin-post, with the action specified as a hidden field routing it to the handler below.
             echo '<div class="wrap">';
-            echo '<h1>Shortcode Data Store</h1>';
+            echo '<p align="center"><img src="' . $pluginPath . 'assets/ShortcodeDatastoreLogo.png" width="250px"></p>';
             echo '<hr>';
             // Output different wording for create and edits.
             $message = '<h2 style="float: left;">' . ($_GET['action'] == "create" ? 'Create a new shortcode' : 'Edit shortcode \'' . $_GET['key'] . '\'' ) . '.</h2>';
@@ -112,7 +113,7 @@
             // Grab all the shortcodes for the database table.
             $rows = $wpdb->get_results("SELECT sdsKey, sdsValue FROM " . $sdsTable);
             echo '<div class="wrap">';
-            echo '<h1>Shortcode Datastore</h1>';
+            echo '<p align="center"><img src="' . $pluginPath . 'assets/ShortcodeDatastoreLogo.png" width="250px"></p>';
             echo '<hr>';
             echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
