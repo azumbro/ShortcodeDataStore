@@ -198,7 +198,7 @@
         }
         wp_redirect($pluginPageURL . $params);
     }
-    /* End POST handlers. *?
+    /* End POST handlers. */
 
     /* Start shortcode code. */
     // Register the below code as a shortcode.
