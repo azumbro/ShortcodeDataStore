@@ -1,9 +1,9 @@
 <?php
     /*
     Plugin Name: Shortcode Datastore
-    Plugin URI: https://blah.zumbro.ma
+    Plugin URI: https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore
     Version: 1.0
-    Description: Allows for flexible plain text of HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
+    Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
     Author: Alexander
     */
     
@@ -54,6 +54,7 @@
         // Setup variables to use on the page.
         global $wpdb;
         $pluginPageURL = "admin.php?page=sdsoptions";
+        $postEndpoint = "admin-post.php";
         $sdsTable = $wpdb->prefix . 'sds_data';
         // Check if there is a valid nonce in the URL. This is the case for deletions.
         $validNonce = false;
@@ -64,7 +65,6 @@
         // This requires a valid nonce.
         if(($_GET['action'] == "create" || $_GET['action'] == "edit") && $validNonce) {
             // The form posts to admin-post, with the action specified as a hidden field routing it to the handler below.
-            $postEndpoint = "admin-post.php";
             echo '<div class="wrap">';
             echo '<h1>Shortcode Data Store</h1>';
             echo '<hr>';
@@ -114,7 +114,7 @@
             echo '<div class="wrap">';
             echo '<h1>Shortcode Datastore</h1>';
             echo '<hr>';
-            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/shortcodedatastore#usage" target="_blank">documentation</a>.</p></div>';
+            echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/WordpressShortcodeDatastorePlugin#shortcode-datastore" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
             echo '<div style="float: right; margin-top: 12px;"><a href="' . wp_nonce_url($url) . '" class="page-title-action">Add Shortcode</a></div>';
             // Output messages for delete or create actions.
@@ -146,12 +146,13 @@
                 echo '<span class="edit"><a href="' . wp_nonce_url($url) .'">Edit</a></span>';
                 echo ' | ';
                 $url = admin_url() . "admin.php?page=sdsoptions&action=delete&key=" . $row->sdsKey;
-                echo '<span class="delete"><a href="' . wp_nonce_url($url) .'">Delete</a></span>';
+                echo '<span class="delete"><a href="' . wp_nonce_url($url) .'" onclick="return confirm(\'Are you sure you would like to delete this shortcode?\')">Delete</a></span>';
                 echo '</td>';
                 echo '</tr>';
             }
             echo '</tbody>';
             echo '</table>';
+            echo '<script>window.history.pushState({}, document.title, "' . admin_url($pluginPageURL). '");</script>';
             echo '</div>';
         }
     }
