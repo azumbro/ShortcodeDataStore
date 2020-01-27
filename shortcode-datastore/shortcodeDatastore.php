@@ -38,7 +38,7 @@
 
     /* Start dashboard page code. */
     // This function tales a message and error bool, outputting a message string in the WP display box format.
-    function createMessage($message, $error) {
+    function sdsCreateMessage($message, $error) {
         $message = '<div id="message" class="' . ($error ?  "error" : "updated") . ' notice is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
         return $message;
     }
@@ -64,35 +64,35 @@
         }
         // If action=create, set up the form page for adding a new shortcode.
         // This requires a valid nonce.
-        if(($_GET['action'] == "create" || $_GET['action'] == "edit") && $validNonce) {
+        if((sanitize_key($_GET['action']) == "create" || sanitize_key($_GET['action']) == "edit") && $validNonce) {
             // The form posts to admin-post, with the action specified as a hidden field routing it to the handler below.
             echo '<div class="wrap">';
             echo '<p align="center"><img src="' . $pluginPath . 'assets/ShortcodeDatastoreLogo.png" width="250px"></p>';
             echo '<hr>';
             // Output different wording for create and edits.
-            $message = '<h2 style="float: left;">' . ($_GET['action'] == "create" ? 'Create a new shortcode' : 'Edit shortcode \'' . $_GET['key'] . '\'' ) . '.</h2>';
+            $message = '<h2 style="float: left;">' . (sanitize_key($_GET['action']) == "create" ? 'Create a new shortcode' : 'Edit shortcode \'' . sanitize_key($_GET['key']) . '\'' ) . '.</h2>';
             echo $message;
             echo '<div style="float: right; margin-top: 12px;"><a href="' . $pluginPageURL . '" class="page-title-action">Existing Shortcodes</a></div>';
             echo "<p>&nbsp;</p>";
             echo "<p>&nbsp;</p>";
             echo '<form action="' . $postEndpoint . '" method="POST">';
             echo '<input type="hidden" name="action" value="sdsRequest">';
-            echo '<input type="hidden" name="type" value="' . $_GET['action'] . '">';
+            echo '<input type="hidden" name="type" value="' . sanitize_key(sanitize_key($_GET['action'])) . '">';
             echo '<p style="font-weight:bold;">Shortcode Key:</p>';
             // Populate the key field if this is an edit.
-            echo '<input type="text" name="key" style="width: 300px;"' . ($_GET['action'] == "edit" ? ' value="' . $_GET['key'] . '" readonly' : '') . ' required>';
+            echo '<input type="text" name="key" style="width: 300px;"' . (sanitize_key($_GET['action']) == "edit" ? ' value="' . sanitize_key($_GET['key']) . '" readonly' : '') . ' required>';
             echo "<p>&nbsp;</p>";
             echo '<p style="font-weight:bold;">Shortcode Value:</p>';
             // If this is an edit, grab the value for the specified key and insert it into the editor.
             $existingValue = '';
-            if($_GET['action'] == "edit") {
+            if(sanitize_key($_GET['action']) == "edit") {
                 // Prepare and run the query for the specified key, returning the value.
                 $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $_GET['key']);
                 $rows = $wpdb->get_results($query);
                 $existingValue = $rows[0]->sdsValue;
             }
             wp_editor($existingValue, 'value', array('theme_advanced_buttons1' => 'bold, italic, ul, pH, pH_min', "media_buttons" => true, "textarea_rows" => 8, "tabindex" => 4));
-            echo '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="' . ($_GET['action'] == "create" ? "Create" : "Update") .' Shortcode"></p>';
+            echo '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="' . (sanitize_key($_GET['action']) == "create" ? "Create" : "Update") .' Shortcode"></p>';
             echo '</form>';
             echo "</div>";
         } 
@@ -101,7 +101,7 @@
             // On action=delete, remove the shortcode from the database.
             // This requires a valid nonce.
             $isDelete = false;
-            if($_GET['action'] == "delete" && $validNonce) {
+            if(sanitize_key($_GET['action']) == "delete" && $validNonce) {
                 $isDelete = true;
                 if($wpdb->delete($sdsTable, array('sdsKey' => $_GET['key'])) > 0) {
                     $deleteSuccessful = true;
@@ -117,12 +117,12 @@
             echo '<hr>';
             // Output messages for delete or create actions.
             if($isDelete) {
-                echo createMessage(($deleteSuccessful ?  "Shortcode deleted successfully." : "An error ocurred while deleting. Please try again."), !$deleteSuccessful);
+                echo sdsCreateMessage(($deleteSuccessful ?  "Shortcode deleted successfully." : "An error ocurred while deleting. Please try again."), !$deleteSuccessful);
             }
             if($_GET["comingfrom"] == "create" || $_GET["comingfrom"] == "edit") {
                 $successMessage = "Shortcode " . ($_GET["comingfrom"] == "create" ? "added" : "updated") . " successfully.";
                 $errorMessage = ($_GET["success"] == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
-                echo createMessage(($_GET["success"] == 1 ?  $successMessage : $errorMessage), $_GET["success"] != 1);
+                echo sdsCreateMessage(($_GET["success"] == 1 ?  $successMessage : $errorMessage), $_GET["success"] != 1);
             }
             echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/ShortcodeDatastore" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
@@ -172,7 +172,7 @@
         if($_POST["type"] == "create") {
             // On a create, insert to the database table. Keys are standardized to lower case here. Also, replace spaces with underscores.
             // On success, 1 is returned (the number of new rows).
-            if($wpdb->insert($sdsTable, array("sdsKey" => str_replace(" ", "_", strtolower($_POST["key"])), "sdsValue" => $_POST["value"])) == 1) {
+            if($wpdb->insert($sdsTable, array("sdsKey" => sanitize_key(str_replace(" ", "_", $_POST["key"])), "sdsValue" => esc_html($_POST["value"]))) == 1) {
                 $params .= "1";
             }
             else {
@@ -189,7 +189,7 @@
         else {
             // On an update, update the database table for the specified key.
             // On success, 1 is returned (the number of new rows).
-            if($wpdb->update($sdsTable, array("sdsValue" => $_POST["value"]), array("sdsKey" => $_POST["key"])) == 1) {
+            if($wpdb->update($sdsTable, array("sdsValue" => esc_html($_POST["value"])), array("sdsKey" => $_POST["key"])) == 1) {
                 $params .= "1";
             }
             else {
