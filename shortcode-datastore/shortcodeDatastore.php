@@ -215,6 +215,6 @@
         $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $key);
         $rows = $wpdb->get_results($query);
         // Out put the value for the specified key. If the key does not exist, this will output an empty string.
-        return esc_html($rows[0]->sdsValue);
+        return $rows[0]->sdsValue;
     }
     /* End shortcode code. */
