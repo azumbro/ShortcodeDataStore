@@ -59,8 +59,8 @@
         $sdsTable = $wpdb->base_prefix . 'sds_data';
         // Check if there is a valid nonce in the URL. This is the case for deletions.
         $validNonce = false;
-        if($_GET['_wpnonce']) {
-            $validNonce = wp_verify_nonce($_GET['_wpnonce']);
+        if(sanitize_key($_GET['_wpnonce'])) {
+            $validNonce = wp_verify_nonce(sanitize_key($_GET['_wpnonce']));
         }
         // If action=create, set up the form page for adding a new shortcode.
         // This requires a valid nonce.
@@ -87,7 +87,7 @@
             $existingValue = '';
             if(sanitize_key($_GET['action']) == "edit") {
                 // Prepare and run the query for the specified key, returning the value.
-                $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $_GET['key']);
+                $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", sanitize_key($_GET['key']));
                 $rows = $wpdb->get_results($query);
                 $existingValue = $rows[0]->sdsValue;
             }
@@ -103,7 +103,7 @@
             $isDelete = false;
             if(sanitize_key($_GET['action']) == "delete" && $validNonce) {
                 $isDelete = true;
-                if($wpdb->delete($sdsTable, array('sdsKey' => $_GET['key'])) > 0) {
+                if($wpdb->delete($sdsTable, array('sdsKey' => sanitize_key($_GET['key']))) > 0) {
                     $deleteSuccessful = true;
                 }
                 else {
@@ -119,10 +119,10 @@
             if($isDelete) {
                 echo sdsCreateMessage(($deleteSuccessful ?  "Shortcode deleted successfully." : "An error ocurred while deleting. Please try again."), !$deleteSuccessful);
             }
-            if($_GET["comingfrom"] == "create" || $_GET["comingfrom"] == "edit") {
-                $successMessage = "Shortcode " . ($_GET["comingfrom"] == "create" ? "added" : "updated") . " successfully.";
-                $errorMessage = ($_GET["success"] == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
-                echo sdsCreateMessage(($_GET["success"] == 1 ?  $successMessage : $errorMessage), $_GET["success"] != 1);
+            if(sanitize_key($_GET["comingfrom"]) == "create" || sanitize_key($_GET["comingfrom"]) == "edit") {
+                $successMessage = "Shortcode " . (sanitize_key($_GET["comingfrom"]) == "create" ? "added" : "updated") . " successfully.";
+                $errorMessage = (sanitize_key($_GET["success"]) == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
+                echo sdsCreateMessage((sanitize_key($_GET["success"]) == 1 ?  $successMessage : $errorMessage), sanitize_key($_GET["success"] != 1));
             }
             echo '<div style="float: left"><p>For usage instructions, see the plugin <a href="https://github.com/azumbro/ShortcodeDatastore" target="_blank">documentation</a>.</p></div>';
             $url = admin_url() . "admin.php?page=sdsoptions&action=create";
@@ -168,11 +168,11 @@
         $sdsTable = $wpdb->base_prefix . 'sds_data';
         $pluginPageURL = "admin.php?page=sdsoptions";
         // The 'comingfrom' field specifies create/edit and success specifies if the insert was successful.
-        $params = "&comingfrom=" . $_POST["type"] . "&success=";
+        $params = "&comingfrom=" . sanitize_key($_POST["type"]) . "&success=";
         if($_POST["type"] == "create") {
             // On a create, insert to the database table. Keys are standardized to lower case here. Also, replace spaces with underscores.
             // On success, 1 is returned (the number of new rows).
-            if($wpdb->insert($sdsTable, array("sdsKey" => sanitize_key(str_replace(" ", "_", $_POST["key"])), "sdsValue" => esc_html($_POST["value"]))) == 1) {
+            if($wpdb->insert($sdsTable, array("sdsKey" => sanitize_key(str_replace(" ", "_", sanitize_key($_POST["key"]))), "sdsValue" => wp_kses_post($_POST["value"]))) == 1) {
                 $params .= "1";
             }
             else {
@@ -189,7 +189,7 @@
         else {
             // On an update, update the database table for the specified key.
             // On success, 1 is returned (the number of new rows).
-            if($wpdb->update($sdsTable, array("sdsValue" => esc_html($_POST["value"])), array("sdsKey" => $_POST["key"])) == 1) {
+            if($wpdb->update($sdsTable, array("sdsValue" => wp_kses_post($_POST["value"])), array("sdsKey" => sanitize_key($_POST["key"]))) == 1) {
                 $params .= "1";
             }
             else {
@@ -215,6 +215,6 @@
         $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $key);
         $rows = $wpdb->get_results($query);
         // Out put the value for the specified key. If the key does not exist, this will output an empty string.
-        return $rows[0]->sdsValue;
+        return esc_html($rows[0]->sdsValue);
     }
     /* End shortcode code. */
