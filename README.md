@@ -21,6 +21,6 @@ A Wordpress plugin that allows for flexible text or HTML to be bound to shortcod
         - The shortcode itself can be copied from the input field and inserted into a page, post, or template (anywhere standard Wordpress shortcodes work).
 - Shortcode Datastore also works with Wordpress multisite installations. Shortcodes can be created and accessed from any subsite where the plugin is enabled (network activation is recommended).
 
-# Releases
-- Release 1.0.0
+# Change Log
+- 2019-01-29 | Release 1.0.0
     - Initial plugin release
