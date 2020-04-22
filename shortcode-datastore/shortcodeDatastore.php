@@ -1,10 +1,10 @@
 <?php
     /*
-    Plugin Name: Shortcode Datastore
-    Plugin URI: https://github.com/azumbro/ShortcodeDatastore
-    Version: 1.0.0
-    Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
-    Author: azumbro
+        Plugin Name: Shortcode Datastore
+        Plugin URI: https://github.com/azumbro/ShortcodeDatastore
+        Version: 1.1.0
+        Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
+        Author: azumbro
     */
     
     defined('ABSPATH') or die('No script kiddies please!');
@@ -140,7 +140,7 @@
             foreach($rows as $row) {
                 echo '<tr>';
                 echo '<td>' . $row->sdsKey . '</td>';
-                echo '<td>' . htmlspecialchars($row->sdsValue) . '</td>';
+                echo '<td>' . str_replace("%YEAR%", date("Y"), htmlspecialchars($row->sdsValue)) . '</td>';
                 echo '<td><input type="text" value="[sds key=\'' . $row->sdsKey . '\']" readonly></td>';
                 echo '<td class="row-actions visible">';
                 $url = admin_url() . "admin.php?page=sdsoptions&action=edit&key=" . $row->sdsKey;
@@ -214,7 +214,9 @@
         // Prepare and run the query for the specified key, returning the value.
         $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $key);
         $rows = $wpdb->get_results($query);
-        // Out put the value for the specified key. If the key does not exist, this will output an empty string.
-        return $rows[0]->sdsValue;
+        // Run replaces on the value for the specified key. If the key does not exist, the value will be an empty string.
+        $value = str_replace("%YEAR%", date("Y"), $rows[0]->sdsValue);
+        // Output the value.
+        return $value;
     }
     /* End shortcode code. */
