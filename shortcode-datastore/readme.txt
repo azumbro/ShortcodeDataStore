@@ -31,7 +31,7 @@ A Wordpress plugin that allows for flexible text or HTML to be bound to shortcod
 
 == Changelog ==
 - 2020-08-28 | Release 1.1.1
-    - Updating latest tested version to Wordpress 5.5.
+    - Updating latest tested Wordpress version to 5.5.
 - 2020-04-21 | Release 1.1.0
     - Added a %YEAR% replacement variable.
 - Release 1.0.0
