@@ -2,7 +2,7 @@
 Contributors: azumbro
 Tags: shortcode, datastore, variables
 Requires at least: 4.6
-Tested up to: 5.4
+Tested up to: 5.5
 Stable tag: 1.1.0
 Requires PHP: 5.2.4
 
@@ -26,10 +26,12 @@ A Wordpress plugin that allows for flexible text or HTML to be bound to shortcod
         - Clicking the "Delete" button for a row will remove the shortcode key and value.
         - The shortcode itself can be copied from the input field and inserted into a page, post, or template (anywhere standard Wordpress shortcodes work).
         - Replacement variables are a way to add dynamic content to your shortcodes. Replacement variables follow the format of ```%NAME%```, with the value being replaced at render time. The replacement variables currently supported are:
-        - ```%YEAR%```: Replaced with the current four character year value.
+            - ```%YEAR%```: Replaced with the current four character year value.
 - Shortcode Datastore also works with Wordpress multisite installations. Shortcodes can be created and accessed from any subsite where the plugin is enabled (network activation is recommended).
 
 == Changelog ==
+- 2020-08-28 | Release 1.1.1
+    - Updating latest tested version to Wordpress 5.5.
 - 2020-04-21 | Release 1.1.0
     - Added a %YEAR% replacement variable.
 - Release 1.0.0

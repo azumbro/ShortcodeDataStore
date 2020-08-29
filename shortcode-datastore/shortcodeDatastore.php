@@ -2,7 +2,7 @@
     /*
         Plugin Name: Shortcode Datastore
         Plugin URI: https://github.com/azumbro/ShortcodeDatastore
-        Version: 1.1.0
+        Version: 1.1.1
         Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
         Author: azumbro
     */
