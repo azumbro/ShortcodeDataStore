@@ -2,8 +2,8 @@
 Contributors: azumbro
 Tags: shortcode, datastore, variables
 Requires at least: 4.6
-Tested up to: 5.5
-Stable tag: 1.1.0
+Tested up to: 5.8
+Stable tag: 1.1.2
 Requires PHP: 5.2.4
 
 == Description ==
