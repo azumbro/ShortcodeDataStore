@@ -2,7 +2,7 @@
     /*
         Plugin Name: Shortcode Datastore
         Plugin URI: https://github.com/azumbro/ShortcodeDatastore
-        Version: 1.1.2
+        Version: 1.2.0
         Description: Allows for flexible plain text or HTML to be bound to shortcodes that can be inserted into pages, posts, or templates. This allows for the same text/HTML to be inserted in multiple places and then managed from one dashboard.
         Author: azumbro
     */
@@ -59,12 +59,12 @@
         $sdsTable = $wpdb->base_prefix . 'sds_data';
         // Check if there is a valid nonce in the URL. This is the case for deletions.
         $validNonce = false;
-        if(sanitize_key($_GET['_wpnonce'])) {
+        if(isset($_GET['_wpnonce'])) {
             $validNonce = wp_verify_nonce(sanitize_key($_GET['_wpnonce']));
         }
         // If action=create, set up the form page for adding a new shortcode.
         // This requires a valid nonce.
-        if((sanitize_key($_GET['action']) == "create" || sanitize_key($_GET['action']) == "edit") && $validNonce) {
+        if(isset($_GET['action']) && (sanitize_key($_GET['action']) == "create" || sanitize_key($_GET['action']) == "edit") && $validNonce) {
             // The form posts to admin-post, with the action specified as a hidden field routing it to the handler below.
             echo '<div class="wrap">';
             echo '<p align="center"><img src="' . $pluginPath . 'assets/ShortcodeDatastoreLogo.png" width="250px"></p>';
@@ -101,7 +101,7 @@
             // On action=delete, remove the shortcode from the database.
             // This requires a valid nonce.
             $isDelete = false;
-            if(sanitize_key($_GET['action']) == "delete" && $validNonce) {
+            if(isset($_GET['action']) && sanitize_key($_GET['action']) == "delete" && $validNonce) {
                 $isDelete = true;
                 if($wpdb->delete($sdsTable, array('sdsKey' => sanitize_key($_GET['key']))) > 0) {
                     $deleteSuccessful = true;
@@ -119,7 +119,7 @@
             if($isDelete) {
                 echo sdsCreateMessage(($deleteSuccessful ?  "Shortcode deleted successfully." : "An error ocurred while deleting. Please try again."), !$deleteSuccessful);
             }
-            if(sanitize_key($_GET["comingfrom"]) == "create" || sanitize_key($_GET["comingfrom"]) == "edit") {
+            if((isset($_GET["comingfrom"]) && sanitize_key($_GET["comingfrom"])) == "create" || (isset($_GET["comingfrom"]) && sanitize_key($_GET["comingfrom"]) == "edit")) {
                 $successMessage = "Shortcode " . (sanitize_key($_GET["comingfrom"]) == "create" ? "added" : "updated") . " successfully.";
                 $errorMessage = (sanitize_key($_GET["success"]) == 0 ? "An error occurred. Please try again." : "Cannot create shortcodes with duplicate keys. Please try again.");
                 echo sdsCreateMessage((sanitize_key($_GET["success"]) == 1 ?  $successMessage : $errorMessage), sanitize_key($_GET["success"] != 1));
@@ -215,7 +215,7 @@
         $query = $wpdb->prepare("SELECT sdsValue FROM " . $sdsTable . " WHERE sdsKey = '%s'", $key);
         $rows = $wpdb->get_results($query);
         // Run replaces on the value for the specified key. If the key does not exist, the value will be an empty string.
-        $value = str_replace("%YEAR%", date("Y"), $rows[0]->sdsValue);
+        $value = count($rows) == 1 ? str_replace("%YEAR%", date("Y"), $rows[0]->sdsValue) : "";
         // Output the value.
         return $value;
     }
